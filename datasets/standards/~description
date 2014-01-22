@@ -1,0 +1,31 @@
+
+
+
+
+FILE: Zspec_NO2-0.01-1cm-0.1m-100ppm-Gauss_trimmed
+PROCESSED: replace '6941  ' with '7,'; replace '6941 ' with '7,'; pare down to 1550-1680 (_fund), 2855-2940 (_harm1)
+(additional processing after import into Python: resolution adjust to 0.1 cm^-1)
+
+ORIGINAL: Zspec_NO2-0.01-1cm-0.1m-100ppm-Gauss
+# Absorption. Instrumental spectrum produced with Sinc AF.
+# Isotopologue 16O14N16O (646). Band(s) "0 1 0" -> "0 0 0", "0 2 0" -> "0 0 0", "0 2 0" -> "0 1 0", "1 0 0" -> "0 0 0", "0 0 1" -> "0 0 0" ....
+# Wavenumber range: 581.716941-3079.15265 cm-1, T: 296 K, P: 1 atm, step: 0.01 cm-1, points: 258744, Contour: Voigt, Vmax: L=0.1m, Resolution: 1 cm-1
+# WN,cm-1    Value (FORMAT F12.6,1X,E17.10)
+
+available as: NO2_Z1_f, NO2_Z1_h
+=======
+=======
+=======
+FILE: Zspec_NO2-0.01-2cm-0.1m-100ppm-Gauss_trimmed
+PROCESSED: replace '6941  ' with '7,'; replace '6941 ' with '7,'; pare down to 1550-1680 (_fund), 2855-2940 (_harm1)
+(additional processing after import into Python: resolution adjust to 0.1 cm^-1)
+
+# Absorption. Instrumental spectrum produced with Gauss AF.
+# Isotopologue 16O14N16O (646). Band(s) "0 1 0" -> "0 0 0", "0 2 0" -> "0 0 0", "0 2 0" -> "0 1 0", "1 0 0" -> "0 0 0", "0 0 1" -> "0 0 0" ....
+# Wavenumber range: 576.716941-3084.15265 cm-1, T: 296 K, P: 1 atm, step: 0.01 cm-1, points: 268744, Contour: Voigt, Vmax: L=0.1m, Resolution: 2 cm-1
+# WN,cm-1    Value (FORMAT F12.6,1X,E17.10)
+
+available as: NO2_Z2_f, NO2_Z2_h
+=======
+=======
+=======

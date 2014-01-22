@@ -1,0 +1,24 @@
+=== Intro to Python
+
+writing and calling functions
+list comprehension
+data types and casting
+
+
+
+= Data
+collecting data with the Arduino
+importing data into Python/SageMath
+graphing data
+
+
+= Numerical Methods
+differential equation solving
+
+
+= Simulations
+stochastic models
+
+
+
+

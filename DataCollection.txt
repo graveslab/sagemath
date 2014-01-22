@@ -1,0 +1,44 @@
+On the Arduino side of things, a simple example sketch is sufficient to read the voltage on one of the Arduino's analog pins and print the result to the serial monitor:
+
+	/*
+	  AnalogReadSerial: Reads an analog input on pin 0, prints the result to the serial monitor 
+	 */
+
+	void setup() {
+	  Serial.begin(9600);
+	}
+
+	void loop() {
+	  int sensorValue = analogRead(A0);
+	  Serial.println(sensorValue);
+	}
+
+A Python script on the connected computer reads the data on the serial monitor and writes it to a file:
+
+	import serial, numpy, matplotlib
+	from time import sleep
+	port = '/dev/ttyACM1'
+	ser = serial.Serial(port,9600,timeout=0)
+	f = open('/tmp/workfile', 'w')
+	run = 0
+	limit = 100
+
+	while run<limit:
+		data = ser.read(9999)
+		if len(data) > 0:
+			f.write(data)
+		sleep(0.1)
+		run += 1
+
+This data can then be plotted:
+
+	data = numpy.genfromtxt('/tmp/workfile')
+	import matplotlib.pyplot as plt
+	z = plt.plot([])
+	z += plt.plot(data)
+	plt.show()
+
+
+
+
+

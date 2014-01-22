@@ -1,0 +1,78 @@
+
+In this lesson, we'll write a script to import data from a text file, process the data, and plot it.
+==================
+From the Notebook:
+	Data...
+	Upload or create file...
+	Select data.txt
+
+The contents of data.txt will appear in the Notebook.
+Click on the 'Worksheet' button to return to the Worksheet.
+
+To access the contents of data.txt, type DATA+'data.txt'.
+If you evaluate this expression, it will list the location of this file.
+You can use this to open the file as you normally would in Python.
+To open data.txt in read-only mode and assign it to variable 'dataFile':
+	dataFile = open(DATA+'data.txt', 'r')
+To read the first line of data.txt and assign its contents to variable 'line':
+	line = dataFile.readline()
+You can verify that this worked by showing 'line:
+	show(line)
+	>>> 0;0.1
+This data is semicolon-separated; we can make use of this fact to move the data from data.txt into an array for further manipulations and graphing:
+	while(line != '')
+		xy = line.split(',')
+		xList.append(xyList[0])
+		yList.append(xyList[1])
+		line=dataFile.readline()
+
+Take a look at xArray to verify that your data is in there:
+	show(xList)
+
+If you attempt to sum xArray, you'll run into a problem:
+	sum(xList)
+	>>> TypeError: unsupported operand type(s) for +: 'int' and 'str'
+
+A TypeError? Let's check the type of the elements of xArray:
+	typeList = []
+	for item in xList:
+		typeList.append(type(item))
+	show(typeList)
+
+Turns out, all of your elements are of type 'str' (string), not numbers!
+(You could have also figured this out by identifying the line in which the problem was occurring by clicking to the left of the error traceback; 'sum()' was the source of the error!)
+
+We can fix this by adding one thing to the loop that reads in the data:
+	DATA+'data.txt'
+	dataFile = open(DATA+'data.txt', 'r')
+	line = dataFile.readline()
+	#show(line)
+
+	xList = []
+	yList = []
+	while(line != ''):
+		xy = line.split(',')
+		xList.append(float(xy[0]))
+		yList.append(float(xy[1]))
+		line=dataFile.readline()
+	sum(xArray)
+	>>> 55.0
+'float()' recasts its argument to a floating-point number.  No problems!
+
+Now that we have our x and y datapoints in lists, how do we combine them to plot the data?
+With a powerful built-in function called 'zip()'!
+'zip()' takes lists as arguments and returns a single list that combines the elements in each list's i'th position into a tuple.
+A tuple is a datatype composed of a series of values separated by commas.
+See it in action:
+	zippedList = zip(xList,yList)
+	show(zippedList)
+	>>> [(0.0,0.0),(1.0,1.0),...,(10.0,5.0)]
+
+Ready for plotting... with 'list_plot()'!
+	p = list_plot(zippedList)
+	show(p)
+That plot's a little large, so let's shrink it down a bit:
+	p = list_plot(zippedList,figsize=(4,3))
+	show(p)
+
+To learn more about plotting options, see: http://learningvirus.com/sage/plotting.html

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for i in *.csv; do mv "$i" "${i/min.csv}".00; done
+
+for i in *; do sed -i '1,5d' "$i"; done

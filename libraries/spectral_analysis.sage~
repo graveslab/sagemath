@@ -1,0 +1,158 @@
+##########################################
+# Define the files we'll be working with #
+##########################################
+
+ftirStandards = {
+    'NO2_low':{
+        'title':'$NO_{2} Low Band$',
+        'file':root+'datasets/standards/spectrum_no2_low.csv',
+        'color':'red',
+        },
+    'NO2_high':{
+        'title':'$NO_{2} High Band$',
+        'file':root+'datasets/standards/spectrum_no2_high.csv',
+        'color':'sandybrown',
+        },
+    'N2O':{
+        'title':'$N_{2}O Fundamental$',
+        'file':root+'datasets/standards/spectrum_n2o_fund.csv',
+        'color':'blue',
+        },
+    'NO':{
+        'title':'$NO Fundamental$',
+        'file':root+'datasets/standards/spectrum_no.csv',
+        'color':'green',
+        },
+    'N2O4':{
+        'title':'$N_{2}O_{4} Fundamental$',
+        'file':root+'datasets/standards/spectrum_n2o4.csv',
+        'color':'purple',
+        },
+    }
+
+goodcolors=['blue','green','red','purple','orange','darkgrey']
+
+##############################################
+# Define the functions we'll be working with #
+##############################################
+
+def listFiles(folder=''):
+	from os import listdir
+	return list(set(listdir(folder))-set(['~description']))
+
+def dataImport(fileName,fileSeparator):
+    """Here is a description of what the hell is going on."""
+    dataFile = open(fileName, 'r')
+    line = dataFile.readline()
+    holdingList = []
+    while(line != ''): 
+        holdingLine = tuple(float(item) for item in line.split(','))
+        holdingList.append(holdingLine)
+        line = dataFile.readline()
+    return holdingList
+
+def plotFiles(files=[],folder='',xmin=1000,xmax=3000):
+	"""Takes a folder, list of .csv files, and optional x-coordinate maximum and minimum bounds and returns a plot."""
+	myplot = list_plot([],figsize=[6,4])	
+	for i in range(0,len(files)):
+		myplot += list_plot(dataImport(folder+files[i],','),legend_label=files[i],color=list(colors)[i])
+	myplot.axes_labels(['$cm^{-1}$','$A$'])
+	myplot.set_legend_options(ncol=2,back_color='whitesmoke',fancybox=true)
+	myplot.set_axes_range(xmin,xmax)
+	return myplot
+
+def resolutionChange(myListA,myListB,myIndex):
+    subListA = []
+    subListB = []
+    indexA = 0
+    indexB = 0
+    while True:
+        if(indexA == len(myListA)) | (indexB == len(myListB)):
+                break
+        # FIX: breaks if myListA or myListB don't contain lists 
+        elif round(myListA[indexA][myIndex],0) == round(myListB[indexB][myIndex],0):
+            subListA.append(myListA[indexA])
+            subListB.append(myListB[indexB])
+            indexA += 1
+            indexB += 1
+        else:
+            if myListA[indexA][myIndex] < myListB[indexB][myIndex]:
+                indexA += 1
+            else:
+                indexB += 1
+    return [subListA,subListB]
+    
+def arrayMult(myList,myFactor,myIndex):
+    from numpy import array
+    arrayMult= [1 for i in myList[0]]
+    arrayMult[myIndex] = myFactor
+    myList = list(array(myList)*arrayMult)
+    for j in range(0,len(myList)):
+        myList[j] = tuple(myList[j])
+    return myList
+    
+def sumSqErr(myListA,myListB,myIndex):
+    """ calculates the sum of squared error for two lists at the specified index. """
+    from numpy import array
+    subListA = [i[myIndex] for i in myListA]
+    subListB = [j[myIndex] for j in myListB]
+    err = list((array(subListA)-array(subListB))^2)
+    return sum(err)
+    
+def plotFit(myTitle,myStandard,myData,myFactor=0):
+    myFullTitle = myTitle + '   (fit factor: ' + str(round(myFactor,2)) + ')'
+    a = list_plot([])
+    a += list_plot(myStandard,legend_label='theory',plotjoined=True,color='blue')
+    a += list_plot(myData,legend_label='experiment',plotjoined=True,color='red',figsize=[6,4],title=myFullTitle)
+    a.axes_labels(['$cm^{-1}$','$A$'])
+    a.set_legend_options(ncol=2,back_color='whitesmoke',fancybox=true,loc=2)
+    return a
+    
+def fitToStandard(myDataFile,myFitSpecies):
+    myFitTitle = ftirStandards[myFitSpecies]['title']
+    myStandardFile = ftirStandards[myFitSpecies]['file']
+    
+    dataList = dataImport(myDataFile,',')
+    standardList = dataImport(myStandardFile,',')
+    tempList = resolutionChange(dataList,standardList,0)
+    dataList = tempList[0]
+    standardList = tempList[1]
+    f  = lambda x: sumSqErr(arrayMult(myList=standardList,myFactor=x[0],myIndex=1),dataList,1)
+    c = []
+    c.append(lambda x: x[0])
+    sol = minimize_constrained(f,c,[1])
+    
+    myFitFactor = sol[0]
+    myFitData = dataList
+    myFitStandard = arrayMult(myList=standardList,myFactor=myFitFactor,myIndex=1)
+    
+    myPlot = plotFit(myTitle=myFitTitle,myStandard=myFitStandard,myData=myFitData,myFactor=myFitFactor)
+    
+    return [myPlot,myFitFactor]
+    
+def fitSingleFile(myDataFile,mySpecies=[]):
+    myFits = []
+    for species in mySpecies:
+        myFits.append(fitToStandard(myDataFile,species))
+    return myFits
+    
+def fitTimeSeries(myDataFolder,myFitSpecies):
+    # for a time series, the x-value must be the time
+    # we can get this by renaming the data files AS the time using another script
+    myTimeSeries = []
+    from os import listdir
+    myFiles = list(set(listdir(myDataFolder))-set(['~description']))
+    for file in sorted(myFiles):
+        myTimeSeries.append([float(file),fitToStandard(myDataFile=(myDataFolder+file),myFitSpecies=myFitSpecies)[1]])
+    return myTimeSeries
+    
+def plotTimeSeries(myDataFolder,myFitSpecies):
+    from numpy import array
+    myPlot = list_plot([])
+    for species in myFitSpecies:
+        timeSeries = arrayMult(myList=fitTimeSeries(myDataFolder,species),myFactor=100,myIndex=1)
+        myPlot += list_plot(timeSeries,legend_label=ftirStandards[species]['title'],color=list(goodcolors)[randint(0,len(goodcolors)-1)],figsize=[6,4])
+        myPlot.set_legend_options(ncol=2,back_color='whitesmoke',fancybox=true,loc=9)
+        myPlot.axes_labels(['$time$','$ppm$'])
+        myPlot.set_axes_range(0,timeSeries[-1][0],0,timeSeries[-1][1])
+    return myPlot
