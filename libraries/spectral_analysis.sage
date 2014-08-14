@@ -152,8 +152,9 @@ def plotTimeSeries(myDataFolder,myFitSpecies):
     myPlot = list_plot([])
     for species in myFitSpecies:
         timeSeries = arrayMult(myList=fitTimeSeries(myDataFolder,species),myFactor=100,myIndex=1)
-        myPlot += list_plot(timeSeries,legend_label=ftirStandards[species]['title'],color=list(goodcolors)[randint(0,len(goodcolors)-1)],figsize=[6,4])
-        myPlot.set_legend_options(ncol=2,back_color='whitesmoke',fancybox=true,loc=9)
+	myPlot += list_plot(timeSeries,color=list(goodcolors)[randint(0,len(goodcolors)-1)],figsize=[6,4])
+        #myPlot += list_plot(timeSeries,legend_label=ftirStandards[species]['title'],color=list(goodcolors)[randint(0,len(goodcolors)-1)],figsize=[6,4])
+        #myPlot.set_legend_options(ncol=2,back_color='whitesmoke',fancybox=true,loc=9)
         myPlot.axes_labels(['$time$','$ppm$'])
         myPlot.set_axes_range(0,timeSeries[-1][0],0,timeSeries[-1][1])
     return myPlot

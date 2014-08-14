@@ -18,16 +18,7 @@ https://github.com/GravesLab/SageMath
 
 navigate into each datafolder, run Sagemath/batch files/batch-rename
 remove any extraneous garbage files
-----------
-reset()
-root = '/mnt/data/Repos/SageMath/'
-fxn_lib = root + 'libraries/spectral_analysis.sage'
-attach fxn_lib
 
-myDataFolder = root + 'datasets/ftir_01/'
-myFitSpecies = ['N2O']
-
-plotTimeSeries(myDataFolder,myFitSpecies)
 
 
 
