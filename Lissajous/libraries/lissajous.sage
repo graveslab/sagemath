@@ -25,7 +25,7 @@ def data_pasted(dataString,fileSeparator,firstColumn=1):
     dataReturn = []
     for line in dataList:
         dataLine = tuple(float(item.strip()) for item in line.split(',')[firstColumn-1:firstColumn+1])
-        dataReturn.append(dataLine)
+        if len(dataLine)!=0: dataReturn.append(dataLine)
     return dataReturn
 
 def find_area(array):
