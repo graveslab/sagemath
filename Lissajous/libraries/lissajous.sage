@@ -8,13 +8,13 @@ def moving_average(interval, window_size):
     window= ones(int(window_size))/float(window_size)
     return convolve(interval, window, 'same')
 
-def data_import(fileName,fileSeparator):
+def data_import(fileName,fileSeparator,firstColumn=1):
     """Imports data from .csv and puts it into an array."""
     dataFile = open(fileName, 'r')
     line = dataFile.readline()
     holdingList = []
     while(line != ''): 
-        holdingLine = tuple(float(item.strip()) for item in line.split(',')[3:5])
+        holdingLine = tuple(float(item.strip()) for item in line.split(',')[firstColumn-1:firstColumn+1])
         holdingList.append(holdingLine)
         line = dataFile.readline()
     return holdingList
@@ -37,6 +37,6 @@ def create_lissajous(Vapp,Vcap,window=1):
         x = moving_average(x,window)
         y = moving_average(y,window)
     Liss = []
-    for i in range(0,len(CH1)):
+    for i in range(0,len(Vapp)):
         Liss.append((x[i],y[i]))
     return Liss
