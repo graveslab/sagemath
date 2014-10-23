@@ -2,8 +2,8 @@ fxn_lib = '/mnt/data/Repos/SageMath/Lissajous/libraries/lissajous.sage' # path t
 attach fxn_lib
 
 root = '/home/brandon/Desktop/lm/'
-Vapp = data_import(fileName=root+'F0002CH1.CSV',fileSeparator=',',firstColumn=4) # applied voltage trace
-Vcap = data_import(fileName=root+'F0002CH2.CSV',fileSeparator=',',firstColumn=4) # series capacitor voltage trace
+Vcap = data_import(fileName=root+'F0002CH1.CSV',fileSeparator=',',firstColumn=4) # series capacitor voltage trace
+Vapp = data_import(fileName=root+'F0002CH2.CSV',fileSeparator=',',firstColumn=4) # applied voltage trace
 windowSize = 10
 
 Liss = create_lissajous(Vapp=Vapp,Vcap=Vcap,window=windowSize)

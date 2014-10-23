@@ -19,6 +19,15 @@ def data_import(fileName,fileSeparator,firstColumn=1):
         line = dataFile.readline()
     return holdingList
 
+def data_pasted(dataString,fileSeparator,firstColumn=1):
+    """Prepares data that has been copied and pasted into the worksheet from a CSV file."""
+    dataList = dataString.splitlines()
+    dataReturn = []
+    for line in dataList:
+        dataLine = tuple(float(item.strip()) for item in line.split(',')[firstColumn-1:firstColumn+1])
+        dataReturn.append(dataLine)
+    return dataReturn
+
 def find_area(array):
     """Find the array of a polygon defined as a set of Cartesian points in an array."""
     # algorithm via http://www.arachnoid.com/area_irregular_polygon/index.html
@@ -27,7 +36,7 @@ def find_area(array):
     for x,y in array[1:]:
         a += (x*oy-y*ox)
         ox,oy = x,y
-    return a/2
+    return abs(a/2)
 
 def create_lissajous(Vapp,Vcap,window=1):
     """Generates a Lissajous figure from the applied and capacitor voltage oscilloscope traces."""
